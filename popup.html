@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+
+<!-- to do 
+  -  add translate below input source
+-   options to  choose the language
+- switch from-target language
+-  when use selected change the language in radio 
+ -->
+<style>
+    #sourcecontainer,
+    #targetcontainer {
+        position: relative;
+        width: 50%;
+    }
+
+    #sourcecontainer {
+        float: left;
+    }
+
+    #targetcontainer {
+        float: right;
+    }
+
+    #topNav ul li ul {
+        overflow: auto;
+    }
+
+    #inputSource,
+    #inputTarget {
+        overflow: auto;
+        resize: both;
+        width: 90%;
+        min-width: 90%;
+        max-width: 90%;
+        height: 70px;
+        min-height: 70px;
+        max-height: 400px;
+        border: 1px solid;
+        padding: 3px;
+    }
+</style>
+
+<head>
+    <title>My Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="popup.js"></script>
+</head>
+
+<body>
+
+    <div style="width: 500px;">
+        <div id="sourcecontainer">
+            <div> From
+                <div>
+                    <input type="radio" id="fr" name="source" value="fr">
+                    <label for="fr">fr</label>
+                </div>
+
+                <div>
+                    <input type="radio" id="en" name="source" value="en">
+                    <label for="en">en</label>
+                </div>
+
+                <div>
+                    <input type="radio" id="auto" name="source" value="auto" checked>
+                    <label for="auto">auto</label>
+                </div>
+
+                <nav id="topNav">
+                    <!-- in progress -->
+                    <a href="#" title="Others" id="othersLanguageSource">Others</a>
+                    <ul id="listothersLanguageSource" style="list-style: none; display:none;">
+                        <li><input type="radio" id="pr1" name="source" value="1">Preset 1</li>
+                        <li><input type="radio" id="pr2" name="source" value="2">Preset 2</li>
+                        <li><input type="radio" id="pr3" name="source" value="3">Preset 3</li>
+                        <li><input type="radio" id="pr4" name="source" value="4">Preset 4</li>
+                    </ul>
+                </nav>
+            </div>
+
+            <textarea id="inputSource"></textarea>
+
+            <input id="translate" type="button" value="Translate" />
+
+        </div>
+        <!-- end of sourcecontainer -->
+        <div id="targetcontainer">
+            <div> To
+                <div>
+                    <input type="radio" id="fr" name="target" value="fr" checked>
+                    <label for="fr">fr</label>
+                </div>
+
+                <div>
+                    <input type="radio" id="en" name="target" value="en">
+                    <label for="en">en</label>
+                </div>
+            </div>
+
+
+            <!-- end of targetcontainer -->
+            <textarea id="inputTarget"></textarea>
+            <input id="copytoclipboard" type="button" value="Copy to clipboard" />
+        </div>
+    </div>
+    <div style=" clear: both;"></div>
+
+</body>
+
+</html>
