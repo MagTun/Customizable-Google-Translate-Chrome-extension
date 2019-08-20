@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html>
 
-
+<head>
+    <title>My Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="popup.js"></script>
+    <script src="languages.js"></script>
+</head>
 <!-- to do 
+    - to add all others language do it with a json lnage from on_hover added dynamicaly with js. 
+    - leave empty spce to add a fave radio (not group) that is shonw/hidden for others 
   -  add translate below input source
 -   options to  choose the language
 - switch from-target language
 -  when use selected change the language in radio 
+answer to the question about select text from tab by adding maneft + ... 
+
  -->
 <style>
     #sourcecontainer,
@@ -27,8 +36,8 @@
         overflow: auto;
     }
 
-    #inputSource,
-    #inputTarget {
+    #textareaSource,
+    #textareaTarget {
         overflow: auto;
         resize: both;
         width: 90%;
@@ -40,74 +49,187 @@
         border: 1px solid;
         padding: 3px;
     }
-</style>
 
-<head>
-    <title>My Page</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <script src="popup.js"></script>
-</head>
+    /* button spacing */
+
+    #othersLanguageSource,
+    #othersLanguageTarget {
+        margin: 2px 0 2px 0;
+    }
+
+    /* list others language above the DOM - the position top is fixed by js */
+    #listothersLanguageTarget,
+    #listothersLanguageSource {
+        position: absolute;
+    }
+
+    /*  radio input like a button https://stackoverflow.com/a/16243163/3154274 */
+    .languages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .languages li {
+        float: left;
+        margin: 0 5px 0 0;
+        width: 100px;
+        height: 25px;
+        position: relative;
+    }
+
+    .languages label,
+    .languages input {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    .languages input[type="radio"] {
+        opacity: 0.01;
+        z-index: 100;
+    }
+
+    .languages input[type="radio"]:checked+label,
+    .Checked+label {
+        background: rgb(144, 202, 250);
+    }
+
+    .languages label {
+        padding: 5px;
+        border: 1px solid #CCC;
+        cursor: pointer;
+        background: white;
+        z-index: 90;
+    }
+
+    .languages label:hover {
+        background: #DDD;
+    }
+
+
+    /* options */
+
+    #sourceoption,
+    #targetoptions {
+        position: relative;
+        width: 50%;
+    }
+
+    #sourceoptions {
+        float: left;
+    }
+
+    #targetoptions {
+        float: right;
+    }
+</style>
 
 <body>
 
-    <div style="width: 500px;">
+    <div style="width: 700px;">
         <div id="sourcecontainer">
-            <div> From
+            <div>
+                <span>From</span>
+                <!-- Filled by popup.js -->
                 <div>
-                    <input type="radio" id="fr" name="source" value="fr">
-                    <label for="fr">fr</label>
+                    <ul class="languages" id='mainLanguageSource'></ul>
                 </div>
-
-                <div>
-                    <input type="radio" id="en" name="source" value="en">
-                    <label for="en">en</label>
-                </div>
-
-                <div>
-                    <input type="radio" id="auto" name="source" value="auto" checked>
-                    <label for="auto">auto</label>
-                </div>
-
-                <nav id="topNav">
-                    <!-- in progress -->
-                    <a href="#" title="Others" id="othersLanguageSource">Others</a>
-                    <ul id="listothersLanguageSource" style="list-style: none; display:none;">
-                        <li><input type="radio" id="es" name="source" value="1">Spanish</li>
-                        <li><input type="radio" id="ru" name="source" value="2">Russian</li>
-                        <li><input type="radio" id="pt" name="source" value="3">Portuguese</li>
-                        <li><input type="radio" id="pl" name="source" value="4">Polish</li>
-                        <li><input type="radio" id="nl" name="source" value="4">Dutch</li>
-
+                <div style=" clear: both;"></div>
+                <div id="topNavSource">
+                    <button id="othersLanguageSource">Others languages</button>
+                    <ul class="languages" id="listothersLanguageSource" style="list-style:none;display:none;">
                     </ul>
-                </nav>
+                </div>
             </div>
-
-            <textarea id="inputSource"></textarea>
-
+            <textarea id="textareaSource"></textarea>
             <input id="translate" type="button" value="Translate" />
+        </div><!-- end of sourcecontainer -->
 
-        </div>
-        <!-- end of sourcecontainer -->
         <div id="targetcontainer">
-            <div> To
+            <div>
+                <span>To</span>
+                <!-- Filled by popup.js -->
                 <div>
-                    <input type="radio" id="fr" name="target" value="fr" checked>
-                    <label for="fr">fr</label>
+                    <ul class="languages" id='mainLanguageTarget'></ul>
                 </div>
-
-                <div>
-                    <input type="radio" id="en" name="target" value="en">
-                    <label for="en">en</label>
+                <div style=" clear: both;"></div>
+                <div id="topNavTarget">
+                    <button id="othersLanguageTarget">Others languages</button>
+                    <ul class="languages" id="listothersLanguageTarget" style="list-style:none;display:none;">
+                    </ul>
                 </div>
             </div>
-
-
-            <!-- end of targetcontainer -->
-            <textarea id="inputTarget"></textarea>
+            <textarea id="textareaTarget"></textarea>
             <input id="copytoclipboard" type="button" value="Copy to clipboard" />
-        </div>
+        </div><!-- end of targetcontainer -->
     </div>
+
     <div style=" clear: both;"></div>
+    <br>
+    <div id="statusblocked" style="color:red;"></div>
+    <div id="statustoolong" style="color:red;"></div>
+    <div id="gototranslate"><a href="https://translate.google.com" target="_blank">Google
+            Translate</a> (direct link in case the source input is too long or the request is blocked or...)</div>
+    <!-- <div id="gotooptions"><a href="options.html" target="_blank">Set default languages</a></div> -->
+
+    <br>
+    <!-- # ============================================================== ¤ options -->
+    <div style="background: rgb(228, 228, 228); padding:5px;">
+        <button id="setoptions">Set Options</button>
+
+        <!-- below = copied in options.html -->
+        <button id="resetoptions" style="float: right;">Reset Options</button>
+        <div style=" clear: both;"></div>
+
+
+        <div id="options" style="display: none;">
+            <div id="sourceoptions">
+                <div id='mainLanguagesSource'>
+                </div>
+                <button id="addnewsourcelanguage">Add another source language</button>
+
+                <div id='defaultLanguageSource'>
+                </div>
+            </div>
+            <div id="targetoptions">
+                <div id='mainLanguagesTarget'>
+                </div>
+                <button id="addnewtargetlanguage">Add another target language</button>
+                <div id='defaultLanguageTarget'>
+                </div>
+
+            </div>
+            <div style=" clear: both;"></div>
+            <div id="statussave" style="color:red;"></div>
+            <button id="save">Save</button>
+            <br>
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </body>
 

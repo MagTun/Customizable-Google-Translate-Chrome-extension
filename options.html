@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<!-- https://developers.chrome.com/extensions/options -->
+<!--  in manifestjson:     "options_page": "options.html", and "permissions": [
+    "storage"
+  ],
+ -->
+
+
+<head>
+    <title>My Test Extension Options</title>
+
+    <script src="options.js"></script>
+    <script src="languages.js"></script>
+</head>
+
+
+<body>
+    <div>Options:</div>
+
+    <button id="resetoptions" style="float: right;">Reset Options</button>
+    <!-- <div style=" clear: both;"></div> -->
+
+
+
+    <div id="sourceoptions">
+        <div id='mainLanguagesSource'>
+        </div>
+        <button id="addnewsourcelanguage">Add another source language</button>
+
+        <div id='defaultLanguageSource'>
+        </div>
+    </div>
+    <div id="targetoptions">
+        <div id='mainLanguagesTarget'>
+        </div>
+        <button id="addnewtargetlanguage">Add another target language</button>
+        <div id='defaultLanguageTarget'>
+        </div>
+
+    </div>
+    <div style=" clear: both;"></div>
+    <div id="statussave" style="color:red;"></div>
+    <button id="save">Save</button>
+
+
+</body>
+
+</html>

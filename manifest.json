@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "Customizable Google Translate Chrome extension",
-    "description": "Use Google translate",
+    "name": "Custom Google Translate extension",
+    "description": "Use Google translate on the go",
     "version": "1.0",
     "browser_action": {
         "default_icon": "icon.png",
@@ -14,6 +14,8 @@
         "tts",
         "activeTab",
         "http://*/*",
-        "https://*/*"
-    ]
+        "https://*/*",
+        "storage"
+    ],
+    "options_page": "options.html"
 }
