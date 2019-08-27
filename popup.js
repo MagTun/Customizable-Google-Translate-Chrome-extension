@@ -281,15 +281,13 @@ function languageRender(Option_MainSourceLanguages, Option_MainTargetLanguages, 
     // # ............................   ¤¤¤¤ target
     document.querySelectorAll('[name="target"]').forEach(function (input) {
         input.addEventListener('change', function (event) {
-            // alert("source  change")
-
-            langs.forEach((item, index) => {
-                if (item.id + "_target" === event.target.id) {
-                    if (Option_MainTargetLanguages[Option_MainTargetLanguages.length - 1].includes(" *")) {
-                        Option_MainTargetLanguages[Option_MainTargetLanguages.length - 1] = item.id + " *";
-                    } else {
-
-                        Option_MainTargetLanguages.push(item.id + " *");
+            if (item.id + "_target" === event.target.id) {
+                    if (!(Option_MainTargetLanguages.includes(langs[index].id))) {
+                        if (Option_MainTargetLanguages[Option_MainTargetLanguages.length - 1].includes(" *")) {
+                            Option_MainTargetLanguages[Option_MainTargetLanguages.length - 1] = item.id + " *";
+                        } else {
+                            Option_MainTargetLanguages.push(item.id + " *");
+                        }
                     }
                     current_target = item.id;
                 }
