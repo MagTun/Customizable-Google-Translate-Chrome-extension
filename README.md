@@ -5,10 +5,11 @@ I am trying to build a Chrome extension using these projects: https://github.com
 
 # How to install the extension
 - Download the zip of this project (tab Code) and unzip it
-- In Chrome to this url chrome://extensions/ (or Chromium-based Edge : edge://extensions/)
+- In Chrome, go to this url chrome://extensions/ (or Chromium-based Edge : edge://extensions/)
 - Enable "Developper mode"
 - Drag and drop the unzipped folder on the extension tab. 
 - To use it, click on the icon or add a shortcut to tigger the extension (from the extension tab, choose "Keyboard Shortcuts" 
 
 # How the extension looks like:
-![image](https://user-images.githubusercontent.com/15843700/62632422-bc4a4c80-b932-11e9-9431-50afd22e7794.png)
+(The options part is hidden by default, but is shown on this printscreen)
+![image](https://user-images.githubusercontent.com/15843700/63772165-d3001580-c8d8-11e9-8670-c64d734c9a90.png)
