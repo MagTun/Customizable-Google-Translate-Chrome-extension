@@ -21,7 +21,7 @@ answer to the question about select text from tab by adding maneft + ...
     #sourcecontainer,
     #targetcontainer {
         position: relative;
-        width: 50%;
+        width: 44%;
     }
 
     #sourcecontainer {
@@ -43,15 +43,14 @@ answer to the question about select text from tab by adding maneft + ...
         width: 90%;
         min-width: 90%;
         max-width: 90%;
-        height: 70px;
+        height: 200px;
         min-height: 70px;
-        max-height: 400px;
+        max-height: 350px;
         border: 1px solid;
         padding: 3px;
     }
 
     /* button spacing */
-
     #othersLanguageSource,
     #othersLanguageTarget {
         margin: 2px 0 2px 0;
@@ -64,22 +63,48 @@ answer to the question about select text from tab by adding maneft + ...
     }
 
     /*  radio input like a button https://stackoverflow.com/a/16243163/3154274 */
+    /*  to arrange item from top to bottom instead of left to right https://stackoverflow.com/a/57697868/3154274
+    ul {
+        column-count: 3;
+        column-gap: 0;
+    }
+    li{
+        display: inline-block;
+    }
+
+  */
+
+    .languagestop {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+        background: rgb(255, 255, 255);
+    }
+
     .languages {
         list-style-type: none;
         margin: 0;
         padding: 0;
+        column-count: 3;
+        column-gap: 0;
+        background: rgb(255, 255, 255);
     }
 
-    .languages li {
-        float: left;
-        margin: 0 5px 0 0;
+    .languages li,
+    .languagestop li {
+        margin: 1px 1px 0 0;
         width: 100px;
         height: 25px;
         position: relative;
+        display: inline-block;
     }
 
+
     .languages label,
-    .languages input {
+    .languages input,
+    .languagestop label,
+    .languagestop input {
         display: block;
         position: absolute;
         top: 0;
@@ -88,17 +113,20 @@ answer to the question about select text from tab by adding maneft + ...
         bottom: 0;
     }
 
-    .languages input[type="radio"] {
+    .languages input[type="radio"],
+    .languagestop input[type="radio"] {
         opacity: 0.01;
         z-index: 100;
     }
 
+    /* .Checked+label */
     .languages input[type="radio"]:checked+label,
-    .Checked+label {
+    .languagestop input[type="radio"]:checked+label {
         background: rgb(144, 202, 250);
     }
 
-    .languages label {
+    .languages label,
+    .languagestop label {
         padding: 5px;
         border: 1px solid #CCC;
         cursor: pointer;
@@ -106,9 +134,17 @@ answer to the question about select text from tab by adding maneft + ...
         z-index: 90;
     }
 
-    .languages label:hover {
+    .languages label:hover,
+    .languagestop label:hover {
         background: #DDD;
     }
+
+
+    .languages input[type="radio"]:focus+label,
+    .languagestop input[type="radio"]:focus+label {
+        box-shadow: 0 0 4px 1px rgba(0, 0, 0, 1);
+    }
+
 
 
     /* options */
@@ -128,7 +164,7 @@ answer to the question about select text from tab by adding maneft + ...
     }
 </style>
 
-<body>
+<body id='bodydiv'>
 
     <div style="width: 700px;">
         <div id="sourcecontainer">
@@ -136,7 +172,7 @@ answer to the question about select text from tab by adding maneft + ...
                 <span>From</span>
                 <!-- Filled by popup.js -->
                 <div>
-                    <ul class="languages" id='mainLanguageSource'></ul>
+                    <ul class="languagestop" id='mainLanguageSource'></ul>
                 </div>
                 <div style=" clear: both;"></div>
                 <div id="topNavSource">
@@ -154,7 +190,7 @@ answer to the question about select text from tab by adding maneft + ...
                 <span>To</span>
                 <!-- Filled by popup.js -->
                 <div>
-                    <ul class="languages" id='mainLanguageTarget'></ul>
+                    <ul class="languagestop" id='mainLanguageTarget'></ul>
                 </div>
                 <div style=" clear: both;"></div>
                 <div id="topNavTarget">

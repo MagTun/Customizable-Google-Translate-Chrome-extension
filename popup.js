@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.storage.sync.get({
         sourcedefault: "auto",
         targetdefault: "fr",
-        sourceLang: ['fr', 'en', 'auto', 'es'],
-        targetLang: ['fr', 'en', 'auto', 'es']
+        sourceLang: ['fr', 'en', 'auto'],
+        targetLang: ['fr', 'en']
     }, function (data) {
         // # ------------------------------------------------------ ¤¤ when the options are retrieve
         var Option_MainSourceLanguages = data.sourceLang;
@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (selection != "") {
                 document.getElementById("textareaSource").value = selection[0];
                 translate();
-
             }
         });
 
@@ -48,6 +47,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
+        document.body.addEventListener('keypress', function (e) {
+
+            if (e.keyCode == 99) { //99 = c - could also be 67 
+                alert("you pressed alt C")
+
+            }
+
+        });
 
         // # ------------------------------------------------------ ¤¤ when state of radio button are changed, trigger translate
         // # ...................................... ¤¤¤ source
@@ -112,9 +119,10 @@ document.addEventListener('DOMContentLoaded', function () {
             var listothersLanguageSource = document.getElementById("listothersLanguageSource")
             if (listothersLanguageSource.style.display == "block") {
                 listothersLanguageSource.style.display = "none";
-
             } else {
+                //display list of menu right at te correct level (sometimes menuTopNavSource is 1 line sometimes 2 lines) 
                 listothersLanguageSource.style.top = menuTopNavSource.style.top
+                // display the list of other languages
                 listothersLanguageSource.style.display = "block";
             }
         }, false);
@@ -133,6 +141,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }, false);
 
 
+        // add listening for background.js
+        chrome.runtime.onMessage.addListener(handleBackgroundMessages);
+
+
+
         // # ------------------------------------------------------ ¤¤end "chrome.storage.sync"
     });
 
@@ -143,8 +156,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // # ============================================================== ¤ functions for popup
 
+
+//   add listening for background.js    
+function handleBackgroundMessages(message) {
+    if (message.property === "copytoclipboard")
+        copyToClipboard();
+}
+
 // # ------------------------------------------------------ ¤¤ create the <radio> for language choice
 function languageRender(Option_MainSourceLanguages, Option_MainTargetLanguages, current_source, current_target) {
+
 
     // # ...................................... ¤¤¤ remove the * of "other languages"
     // when a language is added with the "other languages" button, a  * is added nxt to its ID so we know it doesn't come from "options" and should be replace the next time a language is added with the "other languages" button. 
@@ -281,7 +302,8 @@ function languageRender(Option_MainSourceLanguages, Option_MainTargetLanguages, 
     // # ............................   ¤¤¤¤ target
     document.querySelectorAll('[name="target"]').forEach(function (input) {
         input.addEventListener('change', function (event) {
-            if (item.id + "_target" === event.target.id) {
+            langs.forEach((item, index) => {
+                if (item.id + "_target" === event.target.id) {
                     if (!(Option_MainTargetLanguages.includes(langs[index].id))) {
                         if (Option_MainTargetLanguages[Option_MainTargetLanguages.length - 1].includes(" *")) {
                             Option_MainTargetLanguages[Option_MainTargetLanguages.length - 1] = item.id + " *";
@@ -292,6 +314,7 @@ function languageRender(Option_MainSourceLanguages, Option_MainTargetLanguages, 
                     current_target = item.id;
                 }
             });
+
 
             listothersLanguageTarget.style.display = "none";
             languageRender(Option_MainSourceLanguages, Option_MainTargetLanguages, current_source, current_target);
@@ -319,6 +342,7 @@ function translate() {
         var targetLang = document.querySelector('input[name="target"]:checked').value.replace('_target', '');
 
         // #......................................¤¤¤ ★ google API
+        // https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=en&tl=fr&dt=t&q=father
         var url = "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=" +
             sourceLang + "&tl=" + targetLang + "&dt=t&q=" + encodeURI(sourceText) + "&ie=UTF-8&oe=UTF-8";
         var http = new XMLHttpRequest();
@@ -350,7 +374,7 @@ function translate() {
             }
             if (sourceText.length > 240) {
                 var statustoolong = document.getElementById('statustoolong');
-                statustoolong.textContent = 'Source text is too long, you can get the full translation here:';
+                statustoolong.textContent = 'Source text may be too long, you can get the full translation here:';
                 setTimeout(function () {
                     statustoolong.textContent = '';
                 }, 10000);
@@ -378,7 +402,6 @@ function copyToClipboard() {
     var translated = document.getElementById("textareaTarget");
     translated.select()
     document.execCommand('copy')
-    document.body.removeChild(input)
 }
 
 
