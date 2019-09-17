@@ -7,17 +7,21 @@
     <script src="popup.js"></script>
     <script src="languages.js"></script>
 </head>
-<!-- to do 
+<!-- to do   
     - to add all others language do it with a json lnage from on_hover added dynamicaly with js. 
     - leave empty spce to add a fave radio (not group) that is shonw/hidden for others 
   -  add translate below input source
 -   options to  choose the language
-- switch from-target language
+- switch from-target language  
 -  when use selected change the language in radio 
 answer to the question about select text from tab by adding maneft + ... 
 
  -->
+
+<!-- # ============================================================== ¤ css -->
 <style>
+    /* # ============================================================== ¤ aa */
+    /* # ------------------------------------------------------ ¤¤ main GUI */
     #sourcecontainer,
     #targetcontainer {
         position: relative;
@@ -54,6 +58,7 @@ answer to the question about select text from tab by adding maneft + ...
     #othersLanguageSource,
     #othersLanguageTarget {
         margin: 2px 0 2px 0;
+
     }
 
     /* list others language above the DOM - the position top is fixed by js */
@@ -63,7 +68,8 @@ answer to the question about select text from tab by adding maneft + ...
     }
 
     /*  radio input like a button https://stackoverflow.com/a/16243163/3154274 */
-    /*  to arrange item from top to bottom instead of left to right https://stackoverflow.com/a/57697868/3154274
+    /*  to arrange item from top to bottom instead of left to right 
+https://stackoverflow.com/a/57697868/3154274
     ul {
         column-count: 3;
         column-gap: 0;
@@ -89,6 +95,8 @@ answer to the question about select text from tab by adding maneft + ...
         column-count: 3;
         column-gap: 0;
         background: rgb(255, 255, 255);
+        list-style: none;
+        display: none;
     }
 
     .languages li,
@@ -98,6 +106,7 @@ answer to the question about select text from tab by adding maneft + ...
         height: 25px;
         position: relative;
         display: inline-block;
+        background: rgb(255, 255, 255);
     }
 
 
@@ -151,7 +160,7 @@ answer to the question about select text from tab by adding maneft + ...
 
     #sourceoption,
     #targetoptions {
-        position: relative;
+        /* position: relative; */
         width: 50%;
     }
 
@@ -161,12 +170,13 @@ answer to the question about select text from tab by adding maneft + ...
 
     #targetoptions {
         float: right;
+        z-index: 10;
     }
 </style>
 
 <body id='bodydiv'>
 
-    <div style="width: 700px;">
+    <div style="width: 700px;" id="topdiv">
         <div id="sourcecontainer">
             <div>
                 <span>From</span>
@@ -175,13 +185,17 @@ answer to the question about select text from tab by adding maneft + ...
                     <ul class="languagestop" id='mainLanguageSource'></ul>
                 </div>
                 <div style=" clear: both;"></div>
+                <div id="lang_detected_when_src_is_auto"></div>
                 <div id="topNavSource">
                     <button id="othersLanguageSource">Others languages</button>
-                    <ul class="languages" id="listothersLanguageSource" style="list-style:none;display:none;">
+                    <ul class="languages" id="listothersLanguageSource">
                     </ul>
                 </div>
             </div>
+
             <textarea id="textareaSource"></textarea>
+
+
             <input id="translate" type="button" value="Translate" />
         </div><!-- end of sourcecontainer -->
 
@@ -195,7 +209,7 @@ answer to the question about select text from tab by adding maneft + ...
                 <div style=" clear: both;"></div>
                 <div id="topNavTarget">
                     <button id="othersLanguageTarget">Others languages</button>
-                    <ul class="languages" id="listothersLanguageTarget" style="list-style:none;display:none;">
+                    <ul class="languages" id="listothersLanguageTarget">
                     </ul>
                 </div>
             </div>
@@ -214,7 +228,7 @@ answer to the question about select text from tab by adding maneft + ...
 
     <br>
     <!-- # ============================================================== ¤ options -->
-    <div style="background: rgb(228, 228, 228); padding:5px;">
+    <div style="background: rgb(228, 228, 228); padding:5px; z-index:10;">
         <button id="setoptions">Set Options</button>
 
         <!-- below = copied in options.html -->
@@ -224,18 +238,18 @@ answer to the question about select text from tab by adding maneft + ...
 
         <div id="options" style="display: none;">
             <div id="sourceoptions">
-                <div id='mainLanguagesSource'>
+                <div id='options_mainLanguagesSource'>
                 </div>
                 <button id="addnewsourcelanguage">Add another source language</button>
 
-                <div id='defaultLanguageSource'>
+                <div id='options_defaultLanguageSource'>
                 </div>
             </div>
             <div id="targetoptions">
-                <div id='mainLanguagesTarget'>
+                <div id='options_mainLanguagesTarget'>
                 </div>
                 <button id="addnewtargetlanguage">Add another target language</button>
-                <div id='defaultLanguageTarget'>
+                <div id='options_defaultLanguageTarget'>
                 </div>
 
             </div>

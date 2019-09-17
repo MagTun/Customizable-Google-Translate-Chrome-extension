@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 
 
+
     // # ------------------------------------------------------ ¤¤ retrieve options from chrome.storage (or if there are no option set sourcedefault,targetdefault, sourceLang, targetLang)
     chrome.storage.sync.get({
         sourcedefault: "auto",
@@ -28,53 +29,102 @@ document.addEventListener('DOMContentLoaded', function () {
         chrome.tabs.executeScript({
             code: "window.getSelection().toString();"
         }, function (selection) {
+
             //if there is a selected text, start the translate, otherwise wait for text in input
-            if (selection != "") {
+            if (!(typeof selection === 'undefined' || selection === null)) {
                 document.getElementById("textareaSource").value = selection[0];
                 translate();
             }
         });
 
-        // # ------------------------------------------------------ ¤¤ when text is writen in textareaSource: trigger the translate on enter
-        // source https://stackoverflow.com/questions/6524288/jquery-event-for-user-pressing-enter-in-a-textbox  : enter
-        // source http://jsfiddle.net/arunpjohny/SZ9TG/1/  : via addEventListener
-        var inputText = document.getElementById('textareaSource');
-        inputText.addEventListener('keypress', function (e) {
-            if (e.keyCode == 13) {
-                // 13 = enter
-                // alert("You pressed enter!");
-                translate();
-            }
-        });
 
-        document.body.addEventListener('keypress', function (e) {
 
-            if (e.keyCode == 99) { //99 = c - could also be 67 
-                alert("you pressed alt C")
 
-            }
-
-        });
-
-        // # ------------------------------------------------------ ¤¤ when state of radio button are changed, trigger translate
+        // # ------------------------------------------------------ ¤¤ when state of radio button are changed:
+        // 1) trigger translate  
+        // 2) modify target/source according to choice  (if src=FR, then tgt=EN... )
+        // this addeventlistener only works the first time because when the language are changed we reload the dom - so to modify target/source for the following time, we need to add it also in languageRender cf 
+        // document.querySelectorAll('[name="source"]').forEach(function (input) {
         // # ...................................... ¤¤¤ source
         var radiosource = document.getElementsByName("source");
         for (var i = 0; i < radiosource.length; i++) {
-            radiosource[i].addEventListener('change', function () {
-                // if (!(document.getElementById("textareaSource").value = "")) {
+            radiosource[i].addEventListener('change', function (e) {
+                var input_changed_id = e.target.id;
+                if (input_changed_id.includes("en")) {
+                    document.getElementById("fr_target").checked = true;
+                    current_target = "fr";
+                }
+                if (input_changed_id.includes("fr")) {
+                    document.getElementById("en_target").checked = true;
+                    current_target = "en";
+                }
                 translate();
-                // }
             });
         }
         // # ...................................... ¤¤¤ target
         var radiotarget = document.getElementsByName("target");
         for (var i = 0; i < radiotarget.length; i++) {
-            radiotarget[i].addEventListener('change', function () {
+            radiotarget[i].addEventListener('change', function (e) {
+
+                var input_changed_id = e.target.id;
+                if (input_changed_id.includes("en")) {
+                    document.getElementById("fr_source").checked = true;
+                    current_source = "fr"
+                }
+                if (input_changed_id.includes("fr")) {
+                    document.getElementById("en_source").checked = true;
+                    current_source = "en"
+                }
+
                 // if (!(document.getElementById('textareaSource').value = "")) {
                 translate();
                 // }
             });
+
+
         }
+
+        // # ------------------------------------------------------ ¤¤ shortcut when text is writen in textareaSource: trigger the translate on enter
+        // source https://stackoverflow.com/questions/6524288/jquery-event-for-user-pressing-enter-in-a-textbox  : enter
+        // source http://jsfiddle.net/arunpjohny/SZ9TG/1/  : via addEventListener
+        var textareaSource = document.getElementById('textareaSource');
+        textareaSource.addEventListener('keydown', function (e) {
+            if (e.key == 'Enter' && e.ctrlKey) {
+                translate();
+            }
+            if (e.key == "c" && e.ctrlKey) {
+                copyToClipboard();
+            }
+        });
+        var textareaTarget = document.getElementById('textareaTarget');
+        textareaTarget.addEventListener('keydown', function (e) {
+            if (e.key == 'Enter' && e.ctrlKey) {
+                translate();
+            }
+            if (e.key == "c" && e.ctrlKey) {
+                copyToClipboard();
+            }
+        });
+
+
+        document.body.addEventListener('keydown', function (e) {
+            if (e.key == "s" && e.ctrlKey) {
+                document.getElementById('textareaSource').focus()
+            }
+
+            if (e.key == "t" && e.ctrlKey) {
+                document.getElementById('textareaTarget').focus()
+            }
+
+            if (e.key == "1" && e.ctrlKey) {
+                document.getElementsByName("source")[0].checked = true;
+
+            }
+
+            if (e.key == "2" && e.ctrlKey) {
+                document.getElementsByName("source")[1].checked = true;
+            }
+        });
 
         // # ------------------------------------------------------ ¤¤ add function to button translate
         var buttontranslate = document.getElementById('translate');
@@ -163,7 +213,7 @@ function handleBackgroundMessages(message) {
         copyToClipboard();
 }
 
-// # ------------------------------------------------------ ¤¤ create the <radio> for language choice
+// # ------------------------------------------------------ ¤¤ LanguageRender: create the <radio> for language choice
 function languageRender(Option_MainSourceLanguages, Option_MainTargetLanguages, current_source, current_target) {
 
 
@@ -274,8 +324,19 @@ function languageRender(Option_MainSourceLanguages, Option_MainTargetLanguages, 
             // alert("source  change")
             // let position;
 
+            var input_changed_id = event.target.id
+            if (input_changed_id == "en_source") {
+                document.getElementById("fr_target").checked = true;
+                current_target = "fr";
+            }
+            if (input_changed_id == "fr_source") {
+                document.getElementById("en_target").checked = true;
+                current_target = "en";
+            }
+
             langs.forEach((item, index) => {
                 if (item.id + "_source" === event.target.id) {
+
                     // if the clicked item isn't in the top = in "Option_MainSourceLanguages"
                     if (!(Option_MainSourceLanguages.includes(langs[index].id))) {
                         if (Option_MainSourceLanguages[Option_MainSourceLanguages.length - 1].includes(" *")) {
@@ -302,6 +363,16 @@ function languageRender(Option_MainSourceLanguages, Option_MainTargetLanguages, 
     // # ............................   ¤¤¤¤ target
     document.querySelectorAll('[name="target"]').forEach(function (input) {
         input.addEventListener('change', function (event) {
+            var input_changed_id = event.target.id
+            if (input_changed_id == "en_target") {
+                document.getElementById("fr_source").checked = true;
+                current_source = "fr"
+            }
+            if (input_changed_id == "fr_target") {
+                document.getElementById("en_source").checked = true;
+                current_source = "en"
+            }
+
             langs.forEach((item, index) => {
                 if (item.id + "_target" === event.target.id) {
                     if (!(Option_MainTargetLanguages.includes(langs[index].id))) {
@@ -327,6 +398,9 @@ function languageRender(Option_MainSourceLanguages, Option_MainTargetLanguages, 
 
 // # ------------------------------------------------------ ¤¤  translate (called by button)
 function translate() {
+    // remove the text of  the div that indicate which 
+    document.getElementById('lang_detected_when_src_is_auto').innerText = "";
+
     var sourceTextoriginal = document.getElementById('textareaSource').value;
 
 
@@ -335,11 +409,43 @@ function translate() {
 
         //format source text because google translate stop at "."  and line break %0A so we need to replace them
         sourceText = sourceTextoriginal.replace(/(\r\n|\n|\r|\\n)/gm, '~'); // replace line break 
-        sourceText = sourceText.replace(/\./g, "¤"); // replace "."
+        sourceText = sourceText.replace(".", "¤").replace("!", "¤¤").replace("?", "¤¤¤").replace(";", "¤¤¤¤"); // replace "."
         // alert(sourceText)
         // retrieve language source/target
         var sourceLang = document.querySelector('input[name="source"]:checked').value.replace('_source', '');
         var targetLang = document.querySelector('input[name="target"]:checked').value.replace('_target', '');
+
+        // + ++ + ++ + ++ + ++ + ++ + ++ + split text is too long
+        // var tests = ["this is good", "this is great", "this is awesome"]
+        // var test_translations = []
+        // tests.forEach((test, index) => {
+        //     var url = "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=" +
+        //         sourceLang + "&tl=" + targetLang + "&dt=t&q=" + encodeURI(test) + "&ie=UTF-8&oe=UTF-8";
+        //     var http = new XMLHttpRequest();
+
+        //     http.onreadystatechange = function () {
+        //         if (http.readyState == 4 && http.status == 200) {
+
+
+        //             // # ............................   ¤¤¤¤ retrieve main translation 
+        //             // for clients5.google.com and translate.google.com = JSON.parse(http.responseText)["sentences"][0]["trans"]
+        //             // for translate.googleapis.com =  JSON.parse(http.responseText)[0][0][0]
+        //             var translated = JSON.parse(http.responseText)["sentences"][0]["trans"];
+        //             test_translations.push(translated);
+        //             alert("a " + test_translations)
+        //             var textareaTarget = document.getElementById('textareaTarget');
+        //             textareaTarget.value = test_translations.join("\n")
+        //         }
+        //     }
+        //     http.open("GET", url);
+        //     http.send(null); // null = no parameters
+
+        // });
+
+
+
+
+        //+ ++ + ++ + ++ + ++ + ++ + ++ + ++ + ++ +  only 1 call so whe n too long  = faile
 
         // #......................................¤¤¤ ★ google API
         // https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=en&tl=fr&dt=t&q=father
@@ -352,17 +458,45 @@ function translate() {
         // readyState = 0 = UNSENT  / 1	OPENED	/ 2	HEADERS_RECEIVED / 3	LOADING	/ 4	DONE
         http.onreadystatechange = function () {
             if (http.readyState == 4 && http.status == 200) {
-                // retrieve translation 
-                // alert(JSON.parse(http.responseText)[0][0][0]); //●
-                var translated = JSON.parse(http.responseText)["sentences"][0]["trans"]; // for clients5.google.com and translate.google.com
-                // var translated = JSON.parse(http.responseText)[0][0][0]; // for translate.googleapis.com
 
-                translated = translated.replace(/~/g, "\n");
-                translated = translated.replace(/¤/g, ".");
 
-                // add translated to input 
+                // # ............................   ¤¤¤¤ retrieve main translation 
+                // for clients5.google.com and translate.google.com = JSON.parse(http.responseText)["sentences"][0]["trans"]
+                // for translate.googleapis.com =  JSON.parse(http.responseText)[0][0][0]
+                var json_data = JSON.parse(http.responseText);
+                var main_translation = json_data["sentences"][0]["trans"];
+                main_translation = main_translation.replace("~", "\n");
+                main_translation = main_translation.replace("¤¤¤¤", ";").replace("¤¤¤", "?").replace("¤¤", "!").replace("¤", ".");
+
+                // add translation to input 
                 var textareaTarget = document.getElementById('textareaTarget');
-                textareaTarget.value = translated
+                textareaTarget.value = main_translation
+
+                // # ............................   ¤¤¤¤ retrieve alternative translations  and append it to translate 
+                // phrase don't have alternative translations: 
+                var alternative_translations = json_data["dict"];
+                if (!(typeof alternative_translations === 'undefined' || alternative_translations === null)) {
+                    var alternative_translations_retrieved = []
+                    alternative_translations.forEach((terms, index) => {
+                        terms["terms"].forEach((term, index2) => {
+                            alternative_translations_retrieved.push(term);
+                        });
+                    });
+
+                    //remove duplicate of main translation
+                    var textareaTarget = document.getElementById('textareaTarget');
+
+                    alternative_translations_retrieved_without_dupli = alternative_translations_retrieved.filter(function (e) {
+                        return e !== textareaTarget.value
+                    })
+                    // add translation to input if it not empty
+                    if (alternative_translations_retrieved_without_dupli.length != 0) {
+                        textareaTarget.value = textareaTarget.value + "\n\n\nAlternative translations: \n● " + alternative_translations_retrieved_without_dupli.join("\n● ")
+                    }
+
+
+                }
+
 
             } else if (http.readyState == 4 & (http.status == 429 || http.status == 0)) {
                 // when request is blocked, status remain 0 but in dev console it's 429
@@ -380,6 +514,15 @@ function translate() {
                 }, 10000);
             }
 
+            // when auto is selected tell the user which source language was detected
+            if (sourceLang == "auto") {
+                var src_lang = JSON.parse(http.responseText)["src"];
+                langs.forEach((item, index) => { // langs is a general var from the languages.js
+                    if (item.id == src_lang) {
+                        document.getElementById('lang_detected_when_src_is_auto').innerText = "source language detected = " + item.text
+                    }
+                });
+            }
 
         }
 
@@ -454,7 +597,6 @@ function setoptions() {
 
         // # ............................   ¤¤¤¤ source
         var sourceLang = data.sourceLang;
-        sourceLang.push("none") // this add another "empty" select to add another language
         sourceLang.forEach((lang, index) => {
             let values = generateListOptionLanguageforSelect(lang, data.sourcedefault, true)
             // generateListOptionLanguageforSelect return :
@@ -473,7 +615,6 @@ function setoptions() {
 
         // # ............................   ¤¤¤¤ target   
         var targetLang = data.targetLang;
-        targetLang.push("none")
         targetLang.forEach((lang, index) => {
             let values = generateListOptionLanguageforSelect(lang, data.targetdefault, false)
 
@@ -487,16 +628,17 @@ function setoptions() {
         });
 
 
-        // # ...................................... ¤¤¤ add the main language tables to DOM 
+        // # ...................................... ¤¤¤ add the table for setting the options: 
+        // # ............................   ¤¤¤¤ for top language optiotn
         //  create the tables for choosing the main source/target languages from the succession of row/select created above and add the tables to the DOM 
 
-        document.getElementById('mainLanguagesSource').innerHTML = '<table id="table_mainLanguagesSource"><tr><th width="70%" style="text-align:left;">Set Top Source Languages:</th></tr>' + html_for_mainLanguagesSource + '</table>';
-        document.getElementById('mainLanguagesTarget').innerHTML = '<table id="table_mainLanguagesTarget"><tr><th width="70%" style="text-align:left;">Set Top Target Languages:</th></tr>' + html_for_mainLanguagesTarget + '</table>';
+        document.getElementById('options_mainLanguagesSource').innerHTML = '<table id="table_mainLanguagesSource"><tr><th width="70%" style="text-align:left;">Set Top Source Languages:</th></tr>' + html_for_mainLanguagesSource + '</table>';
+        document.getElementById('options_mainLanguagesTarget').innerHTML = '<table id="table_mainLanguagesTarget"><tr><th width="70%" style="text-align:left;">Set Top Target Languages:</th></tr>' + html_for_mainLanguagesTarget + '</table>';
 
-        // # ...................................... ¤¤¤ add the default language select to DOM
+        // # ............................   ¤¤¤¤ for  default language
         // create the selects for choosing the default source/target language from the options created above and add the tables to the DOM 
-        document.getElementById('defaultLanguageSource').innerHTML = 'Select default source language: <select id = "defaultLanguageSource_select">' + html_for_defaultLanguageSource + '</select>'
-        document.getElementById('defaultLanguageTarget').innerHTML = 'Select default target language: <select id = "defaultLanguageTarget_select">' + html_for_defaultLanguageTarget + '</select>'
+        document.getElementById('options_defaultLanguageSource').innerHTML = 'Select default source language: <select id = "defaultLanguageSource_select">' + html_for_defaultLanguageSource + '</select>'
+        document.getElementById('options_defaultLanguageTarget').innerHTML = 'Select default target language: <select id = "defaultLanguageTarget_select">' + html_for_defaultLanguageTarget + '</select>'
 
 
 
@@ -518,6 +660,8 @@ function setoptions() {
                 });
                 // create the selects for choosing the default source/target language from the options created above and add the tables to the DOM 
                 document.getElementById('defaultLanguageSource').innerHTML = 'Select default source language: <select id = "defaultLanguageSource_select">' + html_for_defaultLanguageSource + '</select>'
+
+
             });
         });
 
