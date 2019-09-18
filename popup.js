@@ -117,12 +117,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (e.key == "1" && e.ctrlKey) {
-                document.getElementsByName("source")[0].checked = true;
+                document.getElementsByName("source")[0].click();
 
             }
 
             if (e.key == "2" && e.ctrlKey) {
-                document.getElementsByName("source")[1].checked = true;
+                document.getElementsByName("source")[1].click();
             }
         });
 
