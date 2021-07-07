@@ -1,0 +1,209 @@
+/* # ============================================================== ¤ aa */
+/* # ------------------------------------------------------ ¤¤ main GUI */
+#main {
+    width: 700px;
+}
+
+
+
+#sourcecontainer,
+#targetcontainer {
+    position: relative;
+    width: 44%;
+}
+
+#sourcecontainer {
+    float: left;
+}
+
+#targetcontainer {
+    float: right;
+}
+
+#topNav ul li ul {
+    overflow: auto;
+}
+
+#textareaSource,
+#textareaTarget {
+    overflow: auto;
+    resize: both;
+    width: 90%;
+    min-width: 90%;
+    max-width: 90%;
+    height: 70px;
+    min-height: 70px;
+    max-height: 350px;
+    border: 1px solid;
+    padding: 3px;
+}
+
+/* button spacing */
+#othersLanguageSource,
+#othersLanguageTarget {
+    margin: 2px 0 2px 0;
+
+}
+
+
+#datapreview {
+    overflow: auto;
+    resize: both;
+    height: 300px;
+    border: 1px solid;
+    padding: 3px;
+}
+
+
+#myfullresultpreview {
+    overflow: auto;
+    resize: both;
+    height: 300px;
+    border: 1px solid;
+    padding: 3px;
+}
+
+/* list others language above the DOM - the position top is fixed by js */
+#listothersLanguageTarget,
+#listothersLanguageSource {
+    position: absolute;
+}
+
+/*  radio input like a button https://stackoverflow.com/a/16243163/3154274 */
+/*  to arrange item from top to bottom instead of left to right 
+https://stackoverflow.com/a/57697868/3154274
+    ul {
+        column-count: 3;
+        column-gap: 0;
+    }
+    li{
+        display: inline-block;
+    }
+
+  */
+
+.languagestop {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    background: rgb(255, 255, 255);
+}
+
+.languages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    column-count: 3;
+    column-gap: 0;
+    background: rgb(255, 255, 255);
+    list-style: none;
+    display: none;
+}
+
+.languages li,
+.languagestop li {
+    margin: 1px 1px 0 0;
+    width: 100px;
+    height: 25px;
+    position: relative;
+    display: inline-block;
+    background: rgb(255, 255, 255);
+}
+
+
+.languages label,
+.languages input,
+.languagestop label,
+.languagestop input {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.languages input[type="radio"],
+.languagestop input[type="radio"] {
+    opacity: 0.01;
+    z-index: 100;
+}
+
+/* .Checked+label */
+.languages input[type="radio"]:checked+label,
+.languagestop input[type="radio"]:checked+label {
+    background: rgb(144, 202, 250);
+}
+
+.languages label,
+.languagestop label {
+    padding: 5px;
+    border: 1px solid #CCC;
+    cursor: pointer;
+    background: white;
+    z-index: 90;
+}
+
+.languages label:hover,
+.languagestop label:hover {
+    background: #DDD;
+}
+
+/* to get shadow on top language when select with tab https://stackoverflow.com/questions/25692634/focus-styling-on-custom-radio-input */
+.languages input[type="radio"]:focus+label,
+.languagestop input[type="radio"]:focus+label {
+    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 1);
+}
+
+
+/*  Copied in option.html */
+/* options */
+
+#sourceoption,
+#targetoptions {
+    /* position: relative; */
+    width: 50%;
+}
+
+#sourceoptions {
+    float: left;
+}
+
+#targetoptions {
+    float: right;
+    z-index: 10;
+}
+
+#gototranslate {
+    font-size: 50%;
+    height: 20px;
+    float: right;
+}
+
+
+pre {
+    outline: 1px solid #ccc;
+    padding: 5px;
+    margin: 5px;
+}
+
+.string {
+    color: green;
+}
+
+.number {
+    color: darkorange;
+}
+
+.boolean {
+    color: blue;
+}
+
+.null {
+    color: magenta;
+}
+
+.key {
+    color: red;
+}

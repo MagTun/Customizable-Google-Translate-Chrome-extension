@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+    <!-- <script src="languages.js"></script>               OLD file  -->
+
+    <script src="js/googletoken.js"></script>
+    <script src="js/features.js"></script>
+    <script src="js/languagesRender.js"></script>
+    <script src="js/languages-map.js"></script>
+    <script src="js/fullResult.js"></script>
+    <script src="popup.js"></script>
+
+
+    <link type="text/css" rel="stylesheet" href="fullresult.css" />
+    <link type="text/css" rel="stylesheet" href="main.css" />
+
+
+
+    <meta name="referrer" content="no-referrer">
+
+
+
+</head>
+<!-- to do   
+    - to add all others language do it with a json lnage from on_hover added dynamicaly with js. 
+    - leave empty spce to add a fave radio (not group) that is shonw/hidden for others 
+  -  add translate below input source
+-   options to  choose the language
+- switch from-target language  
+-  when use selected change the language in radio 
+answer to the question about select text from tab by adding maneft + ... 
+
+ -->
+
+
+<body id='bodydiv'>
+    <iframe src="https://www.bing.com/translator/?&text=vader" width="500" height="500"></iframe>
+
+    <div id="main">
+        <div id="topdiv">
+            <div id="sourcecontainer">
+                <div>
+                    <span>From</span>
+                    <!-- Filled by popup.js -->
+                    <div>
+                        <ul class="languagestop" id='mainLanguageSource'></ul>
+                    </div>
+                    <div style=" clear: both;"></div>
+                    <div id="lang_detected_when_src_is_auto"></div>
+                    <div id="topNavSource">
+                        <button id="othersLanguageSource">Others languages</button>
+                        <ul class="languages" id="listothersLanguageSource">
+                        </ul>
+                    </div>
+                </div>
+
+                <textarea id="textareaSource"></textarea>
+
+
+                <input id="translate" type="button" value="Translate" />
+                <input type="checkbox" id="copyBoth" name="copyBothname">
+                <label id="copyBothlabel" for="copyBothname">Copy "orig,
+                    translated"(alt+N)</label>
+            </div><!-- end of sourcecontainer -->
+
+            <div id="targetcontainer">
+                <div>
+                    <span>To</span>
+                    <!-- Filled by popup.js -->
+                    <div>
+                        <ul class="languagestop" id='mainLanguageTarget'></ul>
+                    </div>
+                    <div style=" clear: both;"></div>
+                    <div id="topNavTarget">
+                        <button id="othersLanguageTarget">Others languages</button>
+                        <ul class="languages" id="listothersLanguageTarget">
+                        </ul>
+                    </div>
+                </div>
+                <textarea id="textareaTarget"></textarea>
+                <input id="copytoclipboard" type="button" value="Copy to clipboard" />
+                <div id="copiedtoclipboard" style="color:red;"></div>
+            </div><!-- end of targetcontainer -->
+        </div>
+
+        <div style=" clear: both;"></div>
+
+        <div id="copiedtoclipboard" style="color:red;"></div>
+        <div id="statusblocked" style="color:red;"></div>
+        <div id="statustoolong" style="color:red;"></div>
+        <div id="gototranslate"><a href="https://translate.google.com" target="_blank">Google
+                Translate</a> (direct link in case the source input is too long or the request is blocked or...)
+        </div>
+        <!-- <div id="gotooptions"><a href="options.html" target="_blank">Set default languages</a></div> -->
+
+        <div id="features">
+            <button id="seedata" style="display: none;float: left; margin:5px;"></button>
+            <!-- see full result : from translate extension  -->
+            <button id="seemyfullresult" style="display: none;float: left; margin:5px;"></button>
+            <!-- see full result : from translate extension  -->
+            <button id="expandtextarea" style="display: none;float: left; margin:5px;"></button>
+            <button id="speakorigine" style="display: none;float: left; margin:5px;">TTS Or</button>
+            <button id="speaktranslate" style="display: none;float: left; margin:5px;">TTS Tr</button>
+
+
+
+            <!-- data div -->
+            <div id="datapreview" style="display: none;clear: both; "></div>
+            <div id="myfullresultpreview" style="display: none;clear: both;"></div>
+
+        </div>
+
+        <!-- # ============================================================== ¤ options -->
+        <div id="divoptions" style="background: rgb(228, 228, 228); padding:5px; z-index:10;clear: both;">
+            <!-- see json -->
+
+
+
+            <button id="setoptions">Set Options</button>
+            <span>(Auto expand field: Alt= or Alt+ ; scroll up/down = top/down arrow)</span>
+            <!-- below = copied in options.html ⚠  if modified here → modify also in options.html ⚠-->
+            <button id="resetoptions" style="float: right;">Reset Options</button>
+            <div style=" clear: both;"></div>
+
+
+            <div id="options" style="display: none;">
+                <div id="sourceoptions">
+                    <div id='options_mainLanguagesSource'>
+                    </div>
+                    <button id="addnewsourcelanguage">Add another source language</button>
+
+                    <div id='options_defaultLanguageSource'>
+                    </div>
+                </div>
+                <div id="targetoptions">
+                    <div id='options_mainLanguagesTarget'>
+                    </div>
+                    <button id="addnewtargetlanguage">Add another target language</button>
+                    <div id='options_defaultLanguageTarget'>
+                    </div>
+
+                </div>
+                <div style=" clear: both;"></div>
+                <div id="statussave" style="color:red;"></div>
+                <button id="save">Save</button>
+                <br>
+            </div>
+            <textarea id='hiddencopy' style="position:absolute;left:-1999px;"></textarea>
+
+
+
+
+        </div>
+    </div>
+    <audio id="tts-audio" />
+</body>
+
+</html>

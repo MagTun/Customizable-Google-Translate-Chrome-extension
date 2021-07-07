@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<!-- https://developers.chrome.com/extensions/options -->
+<!--  in manifestjson:     "options_page": "options.html", and "permissions": [
+    "storage"
+  ],
+
+ -->
+<!-- source = popup.js : only the reset button have been move below everything -->
+
+<head>
+    <title>My Test Extension Options</title>
+    <script src="options.js"></script>
+    <script src="languages.js"></script>
+</head>
+
+<style>
+    /*  Copied in option.html */
+    /* options */
+
+    #sourceoption,
+    #targetoptions {
+        /* position: relative; */
+        width: 50%;
+    }
+
+    #sourceoptions {
+        float: left;
+    }
+
+    #targetoptions {
+        float: right;
+        z-index: 10;
+    }
+</style>
+
+<body>
+
+    <div id="divoptions" style="background: rgb(228, 228, 228); padding:5px; z-index:10; width:700px;">
+        <div id="options"></div>
+        <div id="sourceoptions">
+            <div id='options_mainLanguagesSource'>
+            </div>
+            <button id="addnewsourcelanguage">Add another source language</button>
+
+            <div id='options_defaultLanguageSource'>
+            </div>
+        </div>
+        <div id="targetoptions">
+            <div id='options_mainLanguagesTarget'>
+            </div>
+            <button id="addnewtargetlanguage">Add another target language</button>
+            <div id='options_defaultLanguageTarget'>
+            </div>
+
+        </div>
+        <div style=" clear: both;"></div>
+        <div id="statussave" style="color:red;"></div>
+        <button id="save">Save</button>
+        <br>
+        <button id="resetoptions" style="float: right;">Reset Options</button>
+        <div style=" clear: both;"></div>
+
+    </div>
+</body>
+
+</html>
